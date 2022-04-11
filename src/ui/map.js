@@ -14,6 +14,7 @@ for (var i = 0; i < makiValues.length; i++) {
     maki += '<option value="' + makiValues[i].icon + '">';
 }
 
+
 module.exports = function(context, readonly) {
 
     writable = !readonly;
@@ -89,6 +90,7 @@ module.exports = function(context, readonly) {
 
 function geojsonToLayer(geojson, layer) {
     layer.clearLayers();
+    console.log('L.mapbox.simplestyle.style',L)
     L.geoJson(geojson, {
         style: L.mapbox.simplestyle.style,
         pointToLayer: function(feature, latlon) {
