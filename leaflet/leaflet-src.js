@@ -249,6 +249,8 @@ L.Class.extend = function (props) {
 			NewClass[i] = this[i];
 		}
 	}
+	console.log('content',content)
+	node.appendChild(content);
 
 	// mix static properties into the class
 	if (props.statics) {

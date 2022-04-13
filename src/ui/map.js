@@ -20,6 +20,7 @@ module.exports = function(context, readonly) {
     writable = !readonly;
 
     function map(selection) {
+        console.log('selection.node()',selection.node())
         context.map = L.mapbox.map(selection.node(), null)
             .setView([20, 0], 2)
             .addControl(L.mapbox.geocoderControl('mapbox.places', {
@@ -41,20 +42,21 @@ module.exports = function(context, readonly) {
                   circle: false,
                   polyline: { metric: (navigator.language !== 'en-us' && navigator.language !== 'en-US') },
                   polygon: { metric: (navigator.language !== 'en-us' && navigator.language !== 'en-US') },
-                  marker: {
-                      icon: L.mapbox.marker.icon({})
-                  }
+                 
+                //   marker: {
+                //       icon: L.mapbox.marker.icon({})
+                //   }
               }
           }).addTo(context.map);
-
           context.map
             .on('draw:edited', update)
             .on('draw:deleted', update);
+
         }
 
         context.map
             .on('draw:created', created)
-            .on('popupopen', popup(context));
+            // .on('popupopen', popup(context));
 
         context.map.attributionControl.setPrefix('<a target="_blank" href="http://geojson.io/about.html">About</a>');
 
@@ -62,7 +64,9 @@ module.exports = function(context, readonly) {
             var geojson = context.mapLayer.toGeoJSON();
             geojson = geojsonRewind(geojson);
             geojsonToLayer(geojson, context.mapLayer);
+            //TODO
             context.data.set({map: layerToGeoJSON(context.mapLayer)}, 'map');
+
         }
 
         context.dispatch.on('change.map', function() {
@@ -90,16 +94,19 @@ module.exports = function(context, readonly) {
 
 function geojsonToLayer(geojson, layer) {
     layer.clearLayers();
-    console.log('L.mapbox.simplestyle.style',L)
     L.geoJson(geojson, {
-        style: L.mapbox.simplestyle.style,
+        style: { color: '#000' },
+        // style: L.mapbox.simplestyle.style,
         pointToLayer: function(feature, latlon) {
-            if (!feature.properties) feature.properties = {};
-            return L.mapbox.marker.style(feature, latlon);
+            // if (!feature.properties) feature.properties = {};
+            // console.log('L.mapbox.marker.style(feature, latlon',L.mapbox.marker.style(feature, latlon))
+            // return L.mapbox.marker.style(feature, latlon);
+          return L.marker(latlon)
+
         }
     }).eachLayer(add);
     function add(l) {
-        bindPopup(l);
+        // bindPopup(l);
         l.addTo(layer);
     }
 }
